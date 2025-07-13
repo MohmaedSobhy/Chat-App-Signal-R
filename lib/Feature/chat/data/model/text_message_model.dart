@@ -5,26 +5,21 @@ class TextMessageModel extends MessageModel {
 
   TextMessageModel({
     required super.messageId,
-    required super.isSendByMe,
-    required super.type,
+    required super.senderId,
+    required super.receiverId,
+    required super.isRead,
+    required super.time,
     required this.text,
   });
 
   factory TextMessageModel.fromJson(Map<String, dynamic> json) {
     return TextMessageModel(
       messageId: json['id'] as int,
-      isSendByMe: false,
-      type: json['senderId'] as String,
-      text: json['receiverId'] as String,
+      senderId: json['senderId'] as String,
+      receiverId: json['receiverId'] as String,
+      isRead: json['isRead'] as bool,
+      time: DateTime.parse(json['time'] as String),
+      text: json['text'] as String,
     );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'messageId': messageId,
-      'isSendByMe': isSendByMe,
-      'type': type,
-      'text': text,
-    };
   }
 }

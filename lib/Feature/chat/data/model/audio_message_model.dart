@@ -5,17 +5,21 @@ class AudioMessageModel extends MessageModel {
 
   AudioMessageModel({
     required super.messageId,
-    required super.isSendByMe,
+    required super.senderId,
+    required super.receiverId,
+    required super.isRead,
+    required super.time,
     required this.audioPath,
-    required super.type,
   });
 
   factory AudioMessageModel.fromJson(Map<String, dynamic> json) {
     return AudioMessageModel(
       messageId: json['messageId'] as int,
-      isSendByMe: json['isSendByMe'] as bool,
+      senderId: json['senderId'] as String,
+      receiverId: json['receiverId'] as String,
+      isRead: json['isRead'] as bool,
+      time: DateTime.parse(json['time'] as String),
       audioPath: json['audioPath'] as String,
-      type: json['type'] as String,
     );
   }
 }

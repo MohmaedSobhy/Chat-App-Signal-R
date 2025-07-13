@@ -4,4 +4,5 @@ abstract class ApiEndPoints {
   static const String register = '${baseUrl}api/Account/Registerr';
   static const String getAllUsers = '${baseUrl}api/User/GetAllUsers';
   static const String chatServices = "${baseUrl}chatHub?access_token=";
+  static const String allChatMessage = "${baseUrl}/api/Chat/";
 }

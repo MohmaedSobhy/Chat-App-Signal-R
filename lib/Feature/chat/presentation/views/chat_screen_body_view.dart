@@ -1,7 +1,9 @@
 import 'dart:developer';
 
+import 'package:chat_app/Feature/chat/data/model/text_message_model.dart';
 import 'package:chat_app/Feature/chat/presentation/cubit/chat_messages_cubit.dart';
 import 'package:chat_app/Feature/chat/presentation/widget/send_message_text_field.dart';
+import 'package:chat_app/Feature/chat/presentation/widget/text_message_bubble.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -38,10 +40,15 @@ class _ChatScreenBodyViewState extends State<ChatScreenBodyView> {
                 child: ListView.builder(
                   itemCount: chatMessagesCubit.messages.length,
                   itemBuilder: (context, index) {
-                    return Text(
-                      chatMessagesCubit.messages[index].isSendByMe.toString(),
-                      style: const TextStyle(color: Colors.black),
-                    );
+                    return (chatMessagesCubit.messages[index]
+                            is TextMessageModel)
+                        ? TextMessageBubble(
+                          message:
+                              chatMessagesCubit.messages[index]
+                                  as TextMessageModel,
+                          isMe: true,
+                        )
+                        : const SizedBox();
                   },
                 ),
               );

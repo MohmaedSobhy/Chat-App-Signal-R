@@ -17,6 +17,8 @@ class ChatMessagesCubit extends Cubit<ChatMessagesState> {
 
   List<MessageModel> messages = [];
 
+  void loadChatMessage(String userId) {}
+
   void sendTextMessage(String receiverId) {
     log("The reciever id is ${receiverId}");
 
@@ -30,6 +32,7 @@ class ChatMessagesCubit extends Cubit<ChatMessagesState> {
       recieverId: receiverId,
       text: textEditingController.text.toString(),
     );
+    textEditingController.text = "";
     ConnectionsServices.connection.invoke(
       "sendmessagetouser",
       args: [sendMessageModel.toJson()],
@@ -40,6 +43,7 @@ class ChatMessagesCubit extends Cubit<ChatMessagesState> {
     ConnectionsServices.connection.on("ReceiveMessage", (arguments) {
       if (arguments != null && arguments.isNotEmpty) {
         final data = arguments[0];
+        log(data.toString());
         if (data is Map<String, dynamic>) {
           final message = TextMessageModel.fromJson(data);
           messages.add(message);
