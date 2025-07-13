@@ -25,6 +25,7 @@ class DioService {
     String? token,
   }) async {
     try {
+      dio.options.headers = {'Authorization': 'Bearer ${token ?? ''}'};
       final Response response = await dio.get(
         url,
         queryParameters: queryParameters,

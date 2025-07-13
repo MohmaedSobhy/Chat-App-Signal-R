@@ -1,10 +1,12 @@
 import 'dart:developer';
-
 import 'package:bloc/bloc.dart';
 import 'package:chat_app/Feature/chat/data/model/message_model.dart';
 import 'package:chat_app/Feature/chat/data/model/send_message_model.dart';
 import 'package:chat_app/Feature/chat/data/model/text_message_model.dart';
+import 'package:chat_app/Feature/chat/data/repo/chat_message_repository_implmentation.dart';
 import 'package:chat_app/core/services/connections_services.dart';
+import 'package:chat_app/core/services/get_it_services.dart';
+import 'package:chat_app/core/services/secure_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 import 'package:signalr_netcore/hub_connection.dart';
@@ -12,12 +14,28 @@ import 'package:signalr_netcore/hub_connection.dart';
 part 'chat_messages_state.dart';
 
 class ChatMessagesCubit extends Cubit<ChatMessagesState> {
-  ChatMessagesCubit() : super(ChatMessagesInitial());
+  final ChatMessageRepositoryImplmentation messagesReposiotry;
+  ChatMessagesCubit(this.messagesReposiotry) : super(ChatMessagesInitial());
   TextEditingController textEditingController = TextEditingController();
 
   List<MessageModel> messages = [];
 
-  void loadChatMessage(String userId) {}
+  Future<void> loadChatMessage(String receiverId) async {
+    var token = await GetItServices.getIt<SecureStorage>().getUserToken();
+    var result = await messagesReposiotry.getChatMessages(token!, receiverId);
+    log(token.toString());
+    result.fold(
+      (failure) {
+        log("failed");
+        emit(FailedChatMessages());
+      },
+      (messages) {
+        this.messages.clear();
+        this.messages.addAll(messages);
+        emit(SuccessChatMessages());
+      },
+    );
+  }
 
   void sendTextMessage(String receiverId) {
     log("The reciever id is ${receiverId}");

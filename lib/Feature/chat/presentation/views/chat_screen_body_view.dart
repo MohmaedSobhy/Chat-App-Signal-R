@@ -1,9 +1,11 @@
 import 'dart:developer';
 
 import 'package:chat_app/Feature/chat/data/model/text_message_model.dart';
+import 'package:chat_app/Feature/chat/data/repo/chat_message_repository_implmentation.dart';
 import 'package:chat_app/Feature/chat/presentation/cubit/chat_messages_cubit.dart';
 import 'package:chat_app/Feature/chat/presentation/widget/send_message_text_field.dart';
 import 'package:chat_app/Feature/chat/presentation/widget/text_message_bubble.dart';
+import 'package:chat_app/core/services/get_it_services.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -22,7 +24,9 @@ class _ChatScreenBodyViewState extends State<ChatScreenBodyView> {
   @override
   void initState() {
     super.initState();
-    chatMessagesCubit = ChatMessagesCubit();
+    chatMessagesCubit = ChatMessagesCubit(
+      GetItServices.getIt<ChatMessageRepositoryImplmentation>(),
+    );
 
     chatMessagesCubit.listenToMessages();
   }
@@ -30,7 +34,7 @@ class _ChatScreenBodyViewState extends State<ChatScreenBodyView> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider.value(
-      value: chatMessagesCubit,
+      value: chatMessagesCubit..loadChatMessage(widget.recieverId),
       child: Column(
         children: [
           BlocBuilder<ChatMessagesCubit, ChatMessagesState>(
