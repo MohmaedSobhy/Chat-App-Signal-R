@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:developer';
 
 import 'package:chat_app/Feature/chat/data/model/text_message_model.dart';
@@ -7,6 +6,7 @@ import 'package:chat_app/Feature/chat/data/repo/chat_message_repository_implment
 import 'package:chat_app/Feature/chat/presentation/controller/chat%20messages/chat_messages_cubit.dart';
 import 'package:chat_app/Feature/chat/presentation/widget/send_message_text_field.dart';
 import 'package:chat_app/Feature/chat/presentation/widget/text_message_bubble.dart';
+import 'package:chat_app/core/services/debouncer_services.dart';
 import 'package:chat_app/core/services/get_it_services.dart';
 
 import 'package:flutter/material.dart';
@@ -22,6 +22,7 @@ class ChatScreenBodyView extends StatefulWidget {
 
 class _ChatScreenBodyViewState extends State<ChatScreenBodyView> {
   late final ChatMessagesCubit chatMessagesCubit;
+  late final DebouncerServices debouncerServices;
 
   @override
   void initState() {
@@ -30,7 +31,7 @@ class _ChatScreenBodyViewState extends State<ChatScreenBodyView> {
       GetItServices.getIt<ChatMessageRepositoryImplmentation>(),
       widget.recieverId,
     );
-
+    debouncerServices = DebouncerServices(const Duration(seconds: 1));
     chatMessagesCubit.listenToMessages();
   }
 
@@ -69,17 +70,20 @@ class _ChatScreenBodyViewState extends State<ChatScreenBodyView> {
           SendMessageTextField(
             textEditingController: chatMessagesCubit.textEditingController,
             onChanged: (value) {
-              if (chatMessagesCubit.debounceTimer?.isActive ?? false) {
-                chatMessagesCubit.debounceTimer!.cancel();
+              if (value.toString().isEmpty) {
+                debouncerServices.cancel();
+                chatMessagesCubit.sendYouTyping(
+                  UserTypingModel(userId: widget.recieverId, isTyping: false),
+                );
+                return;
               }
-              chatMessagesCubit.debounceTimer = Timer(
-                const Duration(seconds: 300),
-                () {
+              if (value.toString().isNotEmpty) {
+                debouncerServices.run(() {
                   chatMessagesCubit.sendYouTyping(
                     UserTypingModel(userId: widget.recieverId, isTyping: true),
                   );
-                },
-              );
+                });
+              }
             },
             sendTextMessage: () {
               if (chatMessagesCubit.textEditingController.text.isNotEmpty) {

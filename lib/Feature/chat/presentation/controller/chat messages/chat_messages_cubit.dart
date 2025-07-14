@@ -1,5 +1,5 @@
 import 'dart:async';
-
+import 'dart:developer';
 import 'package:bloc/bloc.dart';
 import 'package:chat_app/Feature/chat/data/model/message_model.dart';
 import 'package:chat_app/Feature/chat/data/model/send_message_model.dart';
@@ -21,7 +21,7 @@ class ChatMessagesCubit extends Cubit<ChatMessagesState> {
   ChatMessagesCubit(this.messagesReposiotry, this.reciverId)
     : super(ChatMessagesInitial());
   TextEditingController textEditingController = TextEditingController();
-  Timer? debounceTimer;
+
   List<MessageModel> messages = [];
 
   Future<void> loadChatMessage() async {
@@ -70,6 +70,7 @@ class ChatMessagesCubit extends Cubit<ChatMessagesState> {
   }
 
   void sendYouTyping(UserTypingModel userTyping) {
+    log("you send");
     ConnectionsServices.connection.invoke(
       "typing",
       args: [userTyping.toJson()],

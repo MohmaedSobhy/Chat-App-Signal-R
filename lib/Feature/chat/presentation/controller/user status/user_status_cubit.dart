@@ -32,6 +32,7 @@ class UserStatusCubit extends Cubit<UserStatusState> {
     });
 
     ConnectionsServices.connection.on("typing", (arguments) {
+      log("iam listen to typing");
       if (arguments != null && arguments.isNotEmpty) {
         var status = arguments[0] as bool;
         if (status) {
