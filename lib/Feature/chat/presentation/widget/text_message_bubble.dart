@@ -48,7 +48,11 @@ class TextMessageBubble extends StatelessWidget {
                 ),
                 if (isMe) ...[
                   const SizedBox(width: 4),
-                  const Icon(Icons.done_all, size: 14, color: Colors.red),
+                  Icon(
+                    Icons.done_all,
+                    size: 14,
+                    color: (message.isRead) ? Colors.red : Colors.grey,
+                  ),
                 ],
               ],
             ),

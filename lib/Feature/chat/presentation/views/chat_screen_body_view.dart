@@ -26,6 +26,7 @@ class _ChatScreenBodyViewState extends State<ChatScreenBodyView> {
     super.initState();
     chatMessagesCubit = ChatMessagesCubit(
       GetItServices.getIt<ChatMessageRepositoryImplmentation>(),
+      widget.recieverId,
     );
 
     chatMessagesCubit.listenToMessages();
@@ -34,12 +35,17 @@ class _ChatScreenBodyViewState extends State<ChatScreenBodyView> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider.value(
-      value: chatMessagesCubit..loadChatMessage(widget.recieverId),
+      value: chatMessagesCubit..loadChatMessage(),
       child: Column(
         children: [
           BlocBuilder<ChatMessagesCubit, ChatMessagesState>(
             builder: (context, state) {
-              log("the rebuild state is");
+              if (state is ChatMessagesInitial ||
+                  state is LoadingChatMessages) {
+                return const Expanded(
+                  child: Center(child: CircularProgressIndicator()),
+                );
+              }
               return Expanded(
                 child: ListView.builder(
                   itemCount: chatMessagesCubit.messages.length,
@@ -50,7 +56,7 @@ class _ChatScreenBodyViewState extends State<ChatScreenBodyView> {
                           message:
                               chatMessagesCubit.messages[index]
                                   as TextMessageModel,
-                          isMe: true,
+                          isMe: chatMessagesCubit.messages[index].sendByYou,
                         )
                         : const SizedBox();
                   },
@@ -62,7 +68,7 @@ class _ChatScreenBodyViewState extends State<ChatScreenBodyView> {
             textEditingController: chatMessagesCubit.textEditingController,
             sendTextMessage: () {
               if (chatMessagesCubit.textEditingController.text.isNotEmpty) {
-                chatMessagesCubit.sendTextMessage(widget.recieverId);
+                chatMessagesCubit.sendTextMessage();
               }
             },
             sendAudioMessage: () {},
@@ -70,5 +76,11 @@ class _ChatScreenBodyViewState extends State<ChatScreenBodyView> {
         ],
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    log("close cubit");
+    super.dispose();
   }
 }

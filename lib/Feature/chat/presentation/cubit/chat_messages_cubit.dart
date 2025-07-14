@@ -15,31 +15,32 @@ part 'chat_messages_state.dart';
 
 class ChatMessagesCubit extends Cubit<ChatMessagesState> {
   final ChatMessageRepositoryImplmentation messagesReposiotry;
-  ChatMessagesCubit(this.messagesReposiotry) : super(ChatMessagesInitial());
+  final String reciverId;
+  ChatMessagesCubit(this.messagesReposiotry, this.reciverId)
+    : super(ChatMessagesInitial());
   TextEditingController textEditingController = TextEditingController();
 
   List<MessageModel> messages = [];
 
-  Future<void> loadChatMessage(String receiverId) async {
+  Future<void> loadChatMessage() async {
+    log("loading cubit");
+    emit(LoadingChatMessages());
     var token = await GetItServices.getIt<SecureStorage>().getUserToken();
-    var result = await messagesReposiotry.getChatMessages(token!, receiverId);
+    var result = await messagesReposiotry.getChatMessages(token!, reciverId);
     log(token.toString());
     result.fold(
       (failure) {
-        log("failed");
         emit(FailedChatMessages());
       },
-      (messages) {
-        this.messages.clear();
-        this.messages.addAll(messages);
+      (data) {
+        messages.clear();
+        messages.addAll(data);
         emit(SuccessChatMessages());
       },
     );
   }
 
-  void sendTextMessage(String receiverId) {
-    log("The reciever id is ${receiverId}");
-
+  void sendTextMessage() {
     if (ConnectionsServices.connection.state != HubConnectionState.Connected) {
       log(
         "Connection is not established. Current state: ${ConnectionsServices.connection.state}",
@@ -47,7 +48,7 @@ class ChatMessagesCubit extends Cubit<ChatMessagesState> {
       return;
     }
     SendMessageModel sendMessageModel = SendMessageModel(
-      recieverId: receiverId,
+      recieverId: reciverId,
       text: textEditingController.text.toString(),
     );
     textEditingController.text = "";
@@ -64,6 +65,7 @@ class ChatMessagesCubit extends Cubit<ChatMessagesState> {
         log(data.toString());
         if (data is Map<String, dynamic>) {
           final message = TextMessageModel.fromJson(data);
+          message.sendByYou = reciverId != message.senderId;
           messages.add(message);
           emit(ChatMessageAdd());
         }

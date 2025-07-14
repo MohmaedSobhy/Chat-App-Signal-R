@@ -4,13 +4,14 @@ abstract class MessageModel {
   final String receiverId;
   final DateTime time;
   final bool isRead;
+  bool sendByYou = false;
 
-  const MessageModel({
+  MessageModel({
     this.messageId = 0,
     required this.senderId,
     required this.receiverId,
-
     required this.time,
+    this.sendByYou = false,
     this.isRead = false,
   });
 }
