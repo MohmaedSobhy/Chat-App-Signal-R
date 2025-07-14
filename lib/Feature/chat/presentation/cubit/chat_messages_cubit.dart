@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:bloc/bloc.dart';
 import 'package:chat_app/Feature/chat/data/model/message_model.dart';
 import 'package:chat_app/Feature/chat/data/model/send_message_model.dart';
@@ -23,11 +22,9 @@ class ChatMessagesCubit extends Cubit<ChatMessagesState> {
   List<MessageModel> messages = [];
 
   Future<void> loadChatMessage() async {
-    log("loading cubit");
     emit(LoadingChatMessages());
     var token = await GetItServices.getIt<SecureStorage>().getUserToken();
     var result = await messagesReposiotry.getChatMessages(token!, reciverId);
-    log(token.toString());
     result.fold(
       (failure) {
         emit(FailedChatMessages());
@@ -42,9 +39,6 @@ class ChatMessagesCubit extends Cubit<ChatMessagesState> {
 
   void sendTextMessage() {
     if (ConnectionsServices.connection.state != HubConnectionState.Connected) {
-      log(
-        "Connection is not established. Current state: ${ConnectionsServices.connection.state}",
-      );
       return;
     }
     SendMessageModel sendMessageModel = SendMessageModel(
@@ -62,7 +56,6 @@ class ChatMessagesCubit extends Cubit<ChatMessagesState> {
     ConnectionsServices.connection.on("ReceiveMessage", (arguments) {
       if (arguments != null && arguments.isNotEmpty) {
         final data = arguments[0];
-        log(data.toString());
         if (data is Map<String, dynamic>) {
           final message = TextMessageModel.fromJson(data);
           message.sendByYou = reciverId != message.senderId;
