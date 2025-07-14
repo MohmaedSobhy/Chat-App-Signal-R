@@ -1,8 +1,10 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:chat_app/Feature/chat/data/model/text_message_model.dart';
+import 'package:chat_app/Feature/chat/data/model/user_typing_model.dart';
 import 'package:chat_app/Feature/chat/data/repo/chat_message_repository_implmentation.dart';
-import 'package:chat_app/Feature/chat/presentation/cubit/chat_messages_cubit.dart';
+import 'package:chat_app/Feature/chat/presentation/controller/chat%20messages/chat_messages_cubit.dart';
 import 'package:chat_app/Feature/chat/presentation/widget/send_message_text_field.dart';
 import 'package:chat_app/Feature/chat/presentation/widget/text_message_bubble.dart';
 import 'package:chat_app/core/services/get_it_services.dart';
@@ -66,9 +68,25 @@ class _ChatScreenBodyViewState extends State<ChatScreenBodyView> {
           ),
           SendMessageTextField(
             textEditingController: chatMessagesCubit.textEditingController,
+            onChanged: (value) {
+              if (chatMessagesCubit.debounceTimer?.isActive ?? false) {
+                chatMessagesCubit.debounceTimer!.cancel();
+              }
+              chatMessagesCubit.debounceTimer = Timer(
+                const Duration(seconds: 300),
+                () {
+                  chatMessagesCubit.sendYouTyping(
+                    UserTypingModel(userId: widget.recieverId, isTyping: true),
+                  );
+                },
+              );
+            },
             sendTextMessage: () {
               if (chatMessagesCubit.textEditingController.text.isNotEmpty) {
                 chatMessagesCubit.sendTextMessage();
+                chatMessagesCubit.sendYouTyping(
+                  UserTypingModel(userId: widget.recieverId, isTyping: false),
+                );
               }
             },
             sendAudioMessage: () {},

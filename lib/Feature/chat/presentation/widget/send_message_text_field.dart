@@ -4,11 +4,13 @@ class SendMessageTextField extends StatefulWidget {
   final TextEditingController textEditingController;
   final VoidCallback sendTextMessage;
   final VoidCallback sendAudioMessage;
+  final ValueChanged<String>? onChanged;
   const SendMessageTextField({
     super.key,
     required this.textEditingController,
     required this.sendAudioMessage,
     required this.sendTextMessage,
+    this.onChanged,
   });
 
   @override
@@ -23,6 +25,7 @@ class _SendMessageTextFieldState extends State<SendMessageTextField> {
         Expanded(
           child: TextField(
             controller: widget.textEditingController,
+            onChanged: widget.onChanged,
             decoration: const InputDecoration(
               hintText: 'Type a message',
               border: OutlineInputBorder(),
