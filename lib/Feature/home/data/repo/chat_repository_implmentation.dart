@@ -7,10 +7,14 @@ import 'package:dartz/dartz.dart';
 
 class ChatRepositoryImplmentation implements ChatRepository {
   @override
-  Future<Either<Failure, List<ContactModel>>> getAllContacts(int page) async {
+  Future<Either<Failure, List<ContactModel>>> getAllContacts(
+    String token,
+    int page,
+  ) async {
     try {
       var response = await DioService.getData(
         url: ApiEndPoints.getAllUsers,
+        token: token,
         queryParameters: {'page': page},
       );
       List<ContactModel> contacts = [];

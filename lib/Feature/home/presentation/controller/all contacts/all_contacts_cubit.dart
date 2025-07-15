@@ -3,6 +3,8 @@ import 'dart:developer';
 import 'package:bloc/bloc.dart';
 import 'package:chat_app/Feature/home/data/model/contact_model.dart';
 import 'package:chat_app/Feature/home/data/repo/chat_repository_implmentation.dart';
+import 'package:chat_app/core/services/get_it_services.dart';
+import 'package:chat_app/core/services/secure_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 
@@ -18,7 +20,8 @@ class AllContactsCubit extends Cubit<AllContactsState> {
   Future<void> loadAllContacts() async {
     contacts.clear();
     emit(LoadingContactsState());
-    var result = await chatRepo.getAllContacts(currentPage);
+    String? token = await GetItServices.getIt<SecureStorage>().getUserToken();
+    var result = await chatRepo.getAllContacts(token!, currentPage);
     result.fold(
       (failure) {
         log(failure.message.toLowerCase());
@@ -34,7 +37,8 @@ class AllContactsCubit extends Cubit<AllContactsState> {
 
   Future<void> loadMoreContacts() async {
     if (noMoreContacts) return;
-    var result = await chatRepo.getAllContacts(currentPage);
+    String? token = await GetItServices.getIt<SecureStorage>().getUserToken();
+    var result = await chatRepo.getAllContacts(token!, currentPage);
     result.fold(
       (failure) {
         emit(FailedContactsState());
