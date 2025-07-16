@@ -2,6 +2,8 @@ import 'package:chat_app/Feature/home/data/model/chat_model.dart';
 import 'package:chat_app/core/routes/app_route.dart';
 import 'package:flutter/material.dart';
 
+import '../../../chat/data/model/reciver_model.dart';
+
 class ChatListTileWidget extends StatelessWidget {
   final ChatModel chatModel;
   const ChatListTileWidget({super.key, required this.chatModel});
@@ -10,7 +12,14 @@ class ChatListTileWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       onTap: () {
-        Navigator.pushNamed(context, AppRoute.chatScreen, arguments: chatModel);
+        Navigator.pushNamed(
+          context,
+          AppRoute.chatScreen,
+          arguments: ReciverModel(
+            name: chatModel.usrName,
+            id: chatModel.senderId,
+          ),
+        );
       },
       leading: CircleAvatar(
         backgroundColor: Theme.of(
