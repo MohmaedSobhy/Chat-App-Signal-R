@@ -42,6 +42,7 @@ class ChatMessagesCubit extends Cubit<ChatMessagesState> {
 
   void sendTextMessage() {
     if (ConnectionsServices.connection.state != HubConnectionState.Connected) {
+      log("you are offline from here");
       return;
     }
     SendMessageModel sendMessageModel = SendMessageModel(

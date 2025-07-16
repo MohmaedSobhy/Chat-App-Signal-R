@@ -1,6 +1,8 @@
 import 'package:chat_app/Feature/home/data/model/chat_model.dart';
+import 'package:chat_app/Feature/home/data/repo/chat_repository_implmentation.dart';
 import 'package:chat_app/Feature/home/presentation/controller/user%20chats/user_chats_cubit.dart';
 import 'package:chat_app/Feature/home/presentation/widgets/chat_list_tile_widget.dart';
+import 'package:chat_app/core/services/get_it_services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -17,22 +19,31 @@ class _HomeBodyViewState extends State<HomeBodyView> {
   @override
   void initState() {
     super.initState();
-    userChatsCubit = UserChatsCubit();
+    userChatsCubit = UserChatsCubit(
+      GetItServices.getIt<ChatRepositoryImplmentation>(),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider.value(
-      value: userChatsCubit,
-      child: ListView.builder(
-        itemCount: 5,
-        itemBuilder: (contet, index) {
-          return ChatListTileWidget(
-            chatModel: ChatModel(
-              senderId: "1",
-              senderName: "Mohamed Sobhy",
-              lastMessage: "Ahelo",
-            ),
+      value: userChatsCubit..loadAllChats(),
+      child: BlocBuilder<UserChatsCubit, UserChatsState>(
+        builder: (context, state) {
+          if (state is UserChatsInitial || state is LoadingChatsState) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          return ListView.builder(
+            itemCount: userChatsCubit.chats.length,
+            itemBuilder: (contet, index) {
+              return ChatListTileWidget(
+                chatModel: ChatModel(
+                  senderId: "1",
+                  senderName: "Mohamed Sobhy",
+                  lastMessage: "Ahelo",
+                ),
+              );
+            },
           );
         },
       ),

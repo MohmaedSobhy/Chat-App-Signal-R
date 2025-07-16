@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:chat_app/Feature/home/data/model/chat_model.dart';
 import 'package:chat_app/Feature/home/data/model/contact_model.dart';
 import 'package:chat_app/Feature/home/data/repo/chat_repository.dart';
 import 'package:chat_app/core/api/api_end_points.dart';
@@ -24,6 +27,21 @@ class ChatRepositoryImplmentation implements ChatRepository {
       return Right(contacts);
     } catch (error) {
       return Left(ServerFailure(""));
+    }
+  }
+
+  @override
+  Future<Either<Failure, List<ChatModel>>> getAllChats(String token) async {
+    try {
+      List<ChatModel> chats = [];
+      var response = await DioService.getData(
+        url: ApiEndPoints.allChats,
+        token: token,
+      );
+      log(response.data['data'].toString());
+      return Right(chats);
+    } catch (error) {
+      return Left(ServerFailure(error.toString()));
     }
   }
 }

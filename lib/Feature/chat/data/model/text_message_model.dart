@@ -19,7 +19,7 @@ class TextMessageModel extends MessageModel {
       senderId: json['senderId'] as String,
       receiverId: json['reciverId'] as String,
       isRead: json['isRead'] as bool,
-      time: DateTime.parse(json['data'] as String),
+      time: DateTime.parse(json['date'] as String),
       text: json['text'] as String,
       sendByYou: json['sendByYou'] as bool,
     );

@@ -88,9 +88,9 @@ class _ChatScreenBodyViewState extends State<ChatScreenBodyView> {
             sendTextMessage: () {
               if (chatMessagesCubit.textEditingController.text.isNotEmpty) {
                 chatMessagesCubit.sendTextMessage();
-                chatMessagesCubit.sendYouTyping(
-                  UserTypingModel(userId: widget.recieverId, isTyping: false),
-                );
+                // chatMessagesCubit.sendYouTyping(
+                //   UserTypingModel(userId: widget.recieverId, isTyping: false),
+                // );
               }
             },
             sendAudioMessage: () {},
