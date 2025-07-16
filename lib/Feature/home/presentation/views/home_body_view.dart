@@ -1,4 +1,3 @@
-import 'package:chat_app/Feature/home/data/model/chat_model.dart';
 import 'package:chat_app/Feature/home/data/repo/chat_repository_implmentation.dart';
 import 'package:chat_app/Feature/home/presentation/controller/user%20chats/user_chats_cubit.dart';
 import 'package:chat_app/Feature/home/presentation/widgets/chat_list_tile_widget.dart';
@@ -36,13 +35,7 @@ class _HomeBodyViewState extends State<HomeBodyView> {
           return ListView.builder(
             itemCount: userChatsCubit.chats.length,
             itemBuilder: (contet, index) {
-              return ChatListTileWidget(
-                chatModel: ChatModel(
-                  senderId: "1",
-                  senderName: "Mohamed Sobhy",
-                  lastMessage: "Ahelo",
-                ),
-              );
+              return ChatListTileWidget(chatModel: userChatsCubit.chats[index]);
             },
           );
         },

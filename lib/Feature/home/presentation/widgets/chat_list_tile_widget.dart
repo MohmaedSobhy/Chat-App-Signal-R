@@ -16,10 +16,10 @@ class ChatListTileWidget extends StatelessWidget {
         backgroundColor: Theme.of(
           context,
         ).primaryColor.withAlpha((0.1 * 255).toInt()),
-        child: Text(chatModel.senderName[0].toUpperCase()),
+        child: Text(chatModel.usrName[0].toUpperCase()),
       ),
       title: Text(
-        chatModel.senderName,
+        chatModel.usrName,
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
         style: const TextStyle(fontWeight: FontWeight.bold),

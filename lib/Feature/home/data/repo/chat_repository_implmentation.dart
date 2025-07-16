@@ -38,9 +38,12 @@ class ChatRepositoryImplmentation implements ChatRepository {
         url: ApiEndPoints.allChats,
         token: token,
       );
-      log(response.data['data'].toString());
+      for (var item in response.data['data']) {
+        chats.add(ChatModel.fromJson(item));
+      }
       return Right(chats);
     } catch (error) {
+      log(error.toString());
       return Left(ServerFailure(error.toString()));
     }
   }
