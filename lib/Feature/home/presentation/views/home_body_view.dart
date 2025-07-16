@@ -21,6 +21,8 @@ class _HomeBodyViewState extends State<HomeBodyView> {
     userChatsCubit = UserChatsCubit(
       GetItServices.getIt<ChatRepositoryImplmentation>(),
     );
+
+    userChatsCubit.listenToMessages();
   }
 
   @override
