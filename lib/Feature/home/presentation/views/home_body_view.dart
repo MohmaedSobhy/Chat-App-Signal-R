@@ -1,6 +1,7 @@
 import 'package:chat_app/Feature/home/data/repo/chat_repository_implmentation.dart';
 import 'package:chat_app/Feature/home/presentation/controller/user%20chats/user_chats_cubit.dart';
 import 'package:chat_app/Feature/home/presentation/widgets/chat_list_tile_widget.dart';
+import 'package:chat_app/Feature/home/presentation/widgets/no_chats_widgets.dart';
 import 'package:chat_app/core/services/get_it_services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -33,6 +34,9 @@ class _HomeBodyViewState extends State<HomeBodyView> {
         builder: (context, state) {
           if (state is UserChatsInitial || state is LoadingChatsState) {
             return const Center(child: CircularProgressIndicator());
+          }
+          if (userChatsCubit.chats.isEmpty) {
+            return const Center(child: NoChatsWidgets());
           }
           return ListView.builder(
             itemCount: userChatsCubit.chats.length,

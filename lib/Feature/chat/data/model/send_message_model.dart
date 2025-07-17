@@ -12,6 +12,6 @@ class SendMessageModel {
   }
 
   Map<String, dynamic> toJson() {
-    return {'Text': text, 'receiverId': recieverId, "chatId": 0};
+    return {'text': text, 'receiverId': recieverId, "chatId": 0};
   }
 }

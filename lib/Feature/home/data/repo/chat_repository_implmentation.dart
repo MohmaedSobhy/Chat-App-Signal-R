@@ -34,10 +34,14 @@ class ChatRepositoryImplmentation implements ChatRepository {
   Future<Either<Failure, List<ChatModel>>> getAllChats(String token) async {
     try {
       List<ChatModel> chats = [];
+      log(token);
+      log(ApiEndPoints.allChats);
       var response = await DioService.getData(
         url: ApiEndPoints.allChats,
         token: token,
       );
+
+      log(response.data['data'].toString());
       for (var item in response.data['data']) {
         chats.add(ChatModel.fromJson(item));
       }

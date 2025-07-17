@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:chat_app/Feature/chat/data/model/message_model.dart';
 
 class TextMessageModel extends MessageModel {
@@ -17,7 +19,7 @@ class TextMessageModel extends MessageModel {
     return TextMessageModel(
       messageId: json['id'] == null ? 0 : json['id'] as int,
       senderId: json['senderId'] as String,
-      receiverId: json['reciverId'] as String,
+      receiverId: "hellow",
       isRead: json['isRead'] as bool,
       time: DateTime.parse(json['date'] as String),
       text: json['text'] as String,

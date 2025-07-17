@@ -6,7 +6,6 @@ import 'package:chat_app/Feature/chat/data/repo/chat_message_repository_implment
 import 'package:chat_app/Feature/chat/presentation/controller/chat%20messages/chat_messages_cubit.dart';
 import 'package:chat_app/Feature/chat/presentation/widget/send_message_text_field.dart';
 import 'package:chat_app/Feature/chat/presentation/widget/text_message_bubble.dart';
-import 'package:chat_app/core/services/debouncer_services.dart';
 import 'package:chat_app/core/services/get_it_services.dart';
 
 import 'package:flutter/material.dart';
@@ -22,7 +21,8 @@ class ChatScreenBodyView extends StatefulWidget {
 
 class _ChatScreenBodyViewState extends State<ChatScreenBodyView> {
   late final ChatMessagesCubit chatMessagesCubit;
-  late final DebouncerServices debouncerServices;
+  bool isTyping = false;
+  ScrollController controller = ScrollController();
 
   @override
   void initState() {
@@ -31,7 +31,7 @@ class _ChatScreenBodyViewState extends State<ChatScreenBodyView> {
       GetItServices.getIt<ChatMessageRepositoryImplmentation>(),
       widget.recieverId,
     );
-    debouncerServices = DebouncerServices(const Duration(seconds: 1));
+
     chatMessagesCubit.listenToMessages();
   }
 
@@ -43,6 +43,7 @@ class _ChatScreenBodyViewState extends State<ChatScreenBodyView> {
         children: [
           BlocBuilder<ChatMessagesCubit, ChatMessagesState>(
             builder: (context, state) {
+              scrollToBottom();
               if (state is ChatMessagesInitial ||
                   state is LoadingChatMessages) {
                 return const Expanded(
@@ -51,6 +52,7 @@ class _ChatScreenBodyViewState extends State<ChatScreenBodyView> {
               }
               return Expanded(
                 child: ListView.builder(
+                  controller: controller,
                   itemCount: chatMessagesCubit.messages.length,
                   itemBuilder: (context, index) {
                     return (chatMessagesCubit.messages[index]
@@ -71,26 +73,22 @@ class _ChatScreenBodyViewState extends State<ChatScreenBodyView> {
             textEditingController: chatMessagesCubit.textEditingController,
             onChanged: (value) {
               if (value.toString().isEmpty) {
-                debouncerServices.cancel();
+                isTyping = false;
                 chatMessagesCubit.sendYouTyping(
                   UserTypingModel(userId: widget.recieverId, isTyping: false),
                 );
                 return;
               }
-              if (value.toString().isNotEmpty) {
-                debouncerServices.run(() {
-                  chatMessagesCubit.sendYouTyping(
-                    UserTypingModel(userId: widget.recieverId, isTyping: true),
-                  );
-                });
+              if (value.toString().isNotEmpty && !isTyping) {
+                chatMessagesCubit.sendYouTyping(
+                  UserTypingModel(userId: widget.recieverId, isTyping: true),
+                );
+                isTyping = true;
               }
             },
             sendTextMessage: () {
               if (chatMessagesCubit.textEditingController.text.isNotEmpty) {
                 chatMessagesCubit.sendTextMessage();
-                // chatMessagesCubit.sendYouTyping(
-                //   UserTypingModel(userId: widget.recieverId, isTyping: false),
-                // );
               }
             },
             sendAudioMessage: () {},
@@ -104,5 +102,17 @@ class _ChatScreenBodyViewState extends State<ChatScreenBodyView> {
   void dispose() {
     log("close cubit");
     super.dispose();
+  }
+
+  void scrollToBottom() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (controller.hasClients) {
+        controller.jumpTo(
+          controller.position.maxScrollExtent,
+          // duration: const Duration(milliseconds: 150),
+          // curve: Curves.easeOut,
+        );
+      }
+    });
   }
 }

@@ -35,8 +35,8 @@ class UserChatsCubit extends Cubit<UserChatsState> {
       if (arguments != null && arguments.isNotEmpty) {
         final data = arguments[0];
         if (data is Map<String, dynamic>) {
-          chats[0].lastMessage = data['text'];
-          emit(SuccessChatState());
+          // chats[0].lastMessage = data['text'];
+          // emit(SuccessChatState());
         }
       }
     });

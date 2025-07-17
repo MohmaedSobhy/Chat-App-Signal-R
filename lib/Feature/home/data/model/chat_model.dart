@@ -21,7 +21,7 @@ class ChatModel {
       senderId: json['senderId'],
       lastMessage: json['lastMessage'],
       unReaded: json['unReaded'],
-      usrName: json['usrName'],
+      usrName: json['title'],
       date: DateTime.parse(json['date']),
     );
   }
