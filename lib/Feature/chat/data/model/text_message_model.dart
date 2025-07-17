@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:chat_app/Feature/chat/data/model/message_model.dart';
 
 class TextMessageModel extends MessageModel {
