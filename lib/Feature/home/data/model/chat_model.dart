@@ -3,7 +3,7 @@ class ChatModel {
   String senderId;
   String lastMessage;
   int unReaded;
-  String usrName;
+  String title;
   DateTime date;
 
   ChatModel({
@@ -11,7 +11,7 @@ class ChatModel {
     required this.senderId,
     required this.lastMessage,
     required this.unReaded,
-    required this.usrName,
+    required this.title,
     required this.date,
   });
 
@@ -21,7 +21,7 @@ class ChatModel {
       senderId: json['senderId'],
       lastMessage: json['lastMessage'],
       unReaded: json['unReaded'],
-      usrName: json['title'],
+      title: json['title'],
       date: DateTime.parse(json['date']),
     );
   }
@@ -32,7 +32,7 @@ class ChatModel {
       'senderId': senderId,
       'lastMessage': lastMessage,
       'unReaded': unReaded,
-      'usrName': usrName,
+      'usrName': title,
       'date': date.toIso8601String(),
     };
   }

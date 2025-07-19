@@ -16,7 +16,7 @@ class ChatListTileWidget extends StatelessWidget {
           context,
           AppRoute.chatScreen,
           arguments: ReciverModel(
-            name: chatModel.usrName,
+            name: chatModel.title,
             id: chatModel.senderId,
           ),
         );
@@ -25,10 +25,10 @@ class ChatListTileWidget extends StatelessWidget {
         backgroundColor: Theme.of(
           context,
         ).primaryColor.withAlpha((0.1 * 255).toInt()),
-        child: Text(chatModel.usrName[0].toUpperCase()),
+        child: Text(chatModel.title[0].toUpperCase()),
       ),
       title: Text(
-        chatModel.usrName,
+        chatModel.title,
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
         style: const TextStyle(fontWeight: FontWeight.bold),
