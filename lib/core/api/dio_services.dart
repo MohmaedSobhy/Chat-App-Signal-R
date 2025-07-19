@@ -11,7 +11,7 @@ class DioService {
         baseUrl: ApiEndPoints.baseUrl,
         headers: {
           'Accept': 'application/json',
-
+          'Content-Type': 'application/json',
           //'lang':'en'
         },
       ),
@@ -46,7 +46,9 @@ class DioService {
     ProgressCallback? onReceiveProgress,
   }) async {
     try {
-      dio.options.headers = {'Authorization': 'Bearer ${token ?? ''}'};
+      if (token != null) {
+        dio.options.headers = {'Authorization': 'Bearer $token'};
+      }
       final Response response = await dio.post(
         url,
         data: body,

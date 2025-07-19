@@ -21,6 +21,7 @@ class RegisterCubit extends Cubit<RegisterState> {
   RegisterCubit(this.authRepository) : super(RegisterInitial());
 
   Future<void> register() async {
+    emit(RegisterLoadingState());
     var result = await authRepository.register(
       RegisterRequestModel(
         userName: nameController.text.toString(),
