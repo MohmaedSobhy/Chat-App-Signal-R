@@ -26,6 +26,4 @@ This is a **Flutter mobile application** that serves as the frontend for a real-
 - **Dio / http** – REST API integration for login, registration, and chat history
 - **JWT Storage** – Token management using `shared_preferences` or `flutter_secure_storage`
 
-## 📂 Project Structure
-
 
