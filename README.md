@@ -1,16 +1,29 @@
-# chat_app
+# 💬 Real-Time Chat App Frontend (Flutter)
 
-A new Flutter project.
+This is a **Flutter mobile application** that serves as the frontend for a real-time chat system. It connects to a **C# ASP.NET Core Web API** backend and enables secure messaging between users with features like real-time messaging, typing indicators, and online/last seen status.
 
-## Getting Started
+## ✨ Features
 
-This project is a starting point for a Flutter application.
+- 🔐 **User Authentication**
+  - Register and login securely using JWT tokens
+- 💬 **Real-Time Messaging**
+  - Chat instantly with other users via SignalR WebSocket connection
+- 📜 **Chat History**
+  - View and load past messages with individual users
+- 🧑‍💻 **Typing Indicators**
+  - See when another user is typing in real-time
+- 🟢 **User Presence**
+  - Check if a user is online or see their last seen time
+- 🧭 **Navigation**
+  - Smooth navigation between login, chat list, chat screen, and profile
 
-A few resources to get you started if this is your first Flutter project:
+## 🛠️ Technologies Used
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+- **Flutter** – Cross-platform mobile development
+- **Dart** – Programming language for Flutter
+- **SignalR Client** – For real-time WebSocket communication
+- **Provider / Riverpod** – State management
+- **Dio / http** – REST API integration for login, registration, and chat history
+- **JWT Storage** – Token management using `shared_preferences` or `flutter_secure_storage`
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+
