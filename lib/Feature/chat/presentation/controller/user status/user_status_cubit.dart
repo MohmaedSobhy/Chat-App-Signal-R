@@ -18,7 +18,8 @@ class UserStatusCubit extends Cubit<UserStatusState> {
   UserStatusCubit(this.reciverId, this.messagesReposiotry)
     : super(UserStatusInitial());
 
-  void listenToUserStatus() {
+  Future<void> listenToUserStatus() async {
+    await ConnectionsServices.checkConnection();
     ConnectionsServices.connection.on("friendstate", (arguments) {
       if (arguments != null && arguments.isNotEmpty) {
         var status = arguments[0] as bool;

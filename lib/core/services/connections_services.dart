@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:chat_app/core/api/api_end_points.dart';
 import 'package:chat_app/core/services/get_it_services.dart';
 import 'package:chat_app/core/services/secure_storage.dart';
@@ -39,5 +41,12 @@ class ConnectionsServices {
     connection.onclose(({error}) {
       print("Connection closed${error != null ? ': $error' : ''}");
     });
+  }
+
+  static Future<void> checkConnection() async {
+    if (connection.state != HubConnectionState.Connected) {
+      log("I init Connections");
+      await initConnection();
+    }
   }
 }

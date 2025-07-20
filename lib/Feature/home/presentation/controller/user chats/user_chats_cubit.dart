@@ -21,6 +21,7 @@ class UserChatsCubit extends Cubit<UserChatsState> {
   }
 
   Future<void> listenToMessages() async {
+    await ConnectionsServices.checkConnection();
     ConnectionsServices.connection.on("ReceiveMessage", (arguments) {
       if (arguments != null && arguments.isNotEmpty) {
         final data = arguments[0];

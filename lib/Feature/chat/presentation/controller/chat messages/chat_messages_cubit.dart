@@ -10,7 +10,6 @@ import 'package:chat_app/core/services/get_it_services.dart';
 import 'package:chat_app/core/services/secure_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
-import 'package:signalr_netcore/hub_connection.dart';
 
 import '../../../data/model/text_message_model.dart';
 
@@ -41,11 +40,8 @@ class ChatMessagesCubit extends Cubit<ChatMessagesState> {
     );
   }
 
-  void sendTextMessage() {
-    if (ConnectionsServices.connection.state != HubConnectionState.Connected) {
-      log("you are offline from here");
-      return;
-    }
+  Future<void> sendTextMessage() async {
+    await ConnectionsServices.checkConnection();
     SendMessageModel sendMessageModel = SendMessageModel(
       recieverId: reciverId,
       text: textEditingController.text.toString(),
@@ -61,7 +57,8 @@ class ChatMessagesCubit extends Cubit<ChatMessagesState> {
     }
   }
 
-  void listenToMessages() {
+  Future<void> listenToMessages() async {
+    await ConnectionsServices.checkConnection();
     ConnectionsServices.connection.on("ReceiveMessage", (arguments) {
       if (arguments != null && arguments.isNotEmpty) {
         final data = arguments[0];
@@ -76,8 +73,8 @@ class ChatMessagesCubit extends Cubit<ChatMessagesState> {
     });
   }
 
-  void sendYouTyping(UserTypingModel userTyping) {
-    log("you send");
+  Future<void> sendYouTyping(UserTypingModel userTyping) async {
+    await ConnectionsServices.checkConnection();
     ConnectionsServices.connection.invoke(
       "typing",
       args: [userTyping.toJson()],
